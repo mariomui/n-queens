@@ -119,10 +119,14 @@
       //[1,0],
       //[0,0]
       var counter = 0;
-      rows.reduce( (currentRow, nextRow) => {
-        counter += currentRow[colIndex] + nextRow[colIndex];
-        return currentRow;
-      });
+      for (let i = 0; i < rows.length; i++) {
+       let row = rows[i];
+       counter += row[colIndex];
+      }
+      // rows.reduce( (currentRow, nextRow) => {
+      //   counter += currentRow[colIndex] + nextRow[colIndex];
+      //   return currentRow;
+      // });
       if (counter > 1) {
         return true;
       }
@@ -157,18 +161,42 @@
       //input is index int
       let rows = this.rows();
       let counter = 0;
-      // majorDiagonalColumnIndexAtFirstRow = -(rows.length - 1);
-      rows.reduce( (currentRow, nextRow) => {
-        counter += currentRow[majorDiagonalColumnIndexAtFirstRow] + nextRow[majorDiagonalColumnIndexAtFirstRow+1];
-        return currentRow;
-      });
+
+      for (let i = 0; i < rows.length; i++) {
+        let row = rows[i];
+        let value = row[majorDiagonalColumnIndexAtFirstRow];
+        if (value === 1 && (majorDiagonalColumnIndexAtFirstRow >= 0)) {
+          counter += 1;
+        }
+        majorDiagonalColumnIndexAtFirstRow++;
+      };
       if (counter > 1) {
         return true;
       }
       return false;
+
+      //   for (let j = majorDiagonalColumnIndexAtFirstRow; j < row.length - 1; j++) {
+      //     let value = row[j];
+          
+      //     // let nextRow = i + 1;
+      //     // let nextCol = j + 1;
+      //     console.log(nextRow, 'nextRow')
+      //     // let next = rows[nextRow][nextCol];
+      //     if (current === next) {
+      //       return true;
+      //     }
+      //   }
+      // }
+      // rows.reduce( (currentRow, nextRow) => {
+      //   console.log(counter, '    counter');
+      //   if (majorDiagonalColumnIndexAtFirstRow < 0) {
+      //     return currentRow;
+      //   }
+      //   counter += currentRow[majorDiagonalColumnIndexAtFirstRow] + nextRow[majorDiagonalColumnIndexAtFirstRow];
+      //   return currentRow;
+      // });
     },
 
-    // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       // check all major diagonals
       let rows = this.rows(); 
@@ -176,19 +204,26 @@
       for (let i = 0; i < rows.length; i++) {  
         let currentRow = rows[i];
         let nextRow = rows[i + 1];
+        
+        for (let j = startingIndex; j < 0; j++) { 
+  
+          if (this.hasMajorDiagonalConflictAt(j)) {
+            return true;
+          }
+        }
+      }
+      for (let i = 0; i < rows.length; i++) {  
+        let currentRow = rows[i];
+        let nextRow = rows[i + 1];
         for (let j = 0; j < rows.length; j++) { 
           let colIndex = j;
-          if (colIndex === 0) {
-            i = 0;
-          }
-          let majorDiagonalColumnIndexAtFirstRow = colIndex;
-          if (this.hasMajorDiagonalConflictAt(majorDiagonalColumnIndexAtFirstRow)) {
+
+          if (this.hasMajorDiagonalConflictAt(j)) {
             return true;
           }
         }
       }
       return false;
-      // this.hasAnyMajorDiagonalConflicts(0);
     },
 
 
@@ -198,12 +233,45 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      let rows = this.rows();
+      let counter = 0;
+      for (let i = 0; i < rows.length; i++) {
+        let row = rows[i];
+        let value = row[minorDiagonalColumnIndexAtFirstRow];
+        if (value === 1 && (minorDiagonalColumnIndexAtFirstRow >= 0)) {
+          counter += 1;
+        }
+        minorDiagonalColumnIndexAtFirstRow--;
+      };
+      if (counter > 1) {
+        return true;
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      let rows = this.rows(); 
+      let startingIndex = (rows.length - 1) * 2;
+      console.log(startingIndex)
+      console.log(rows, '   rows');
+      for (let i = 0; i < rows.length; i++) {  
+        for (let j = startingIndex; j >= rows.length; j--) { 
+          if (this.hasMinorDiagonalConflictAt(j)) {
+            return true;
+          }
+        }
+      }
+      for (let i = 0; i < rows.length; i++) {  
+        let currentRow = rows[i];
+        let nextRow = rows[i + 1];
+        for (let j = rows.length - 1; j >= 0; j--) { 
+          if (this.hasMinorDiagonalConflictAt(j)) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
