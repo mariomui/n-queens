@@ -165,7 +165,7 @@
       for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let value = row[majorDiagonalColumnIndexAtFirstRow];
-        if (value === 1 && (majorDiagonalColumnIndexAtFirstRow >= 0)) {
+        if (value === 1) {
           counter += 1;
         }
         majorDiagonalColumnIndexAtFirstRow++;
@@ -201,26 +201,14 @@
       // check all major diagonals
       let rows = this.rows(); 
       let startingIndex = -(rows.length - 1);
-      for (let i = 0; i < rows.length; i++) {  
-        let currentRow = rows[i];
-        let nextRow = rows[i + 1];
-        
-        for (let j = startingIndex; j < 0; j++) { 
-  
-          if (this.hasMajorDiagonalConflictAt(j)) {
-            return true;
-          }
+      for (let i = startingIndex; i < 0; i++) {  
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
         }
       }
       for (let i = 0; i < rows.length; i++) {  
-        let currentRow = rows[i];
-        let nextRow = rows[i + 1];
-        for (let j = 0; j < rows.length; j++) { 
-          let colIndex = j;
-
-          if (this.hasMajorDiagonalConflictAt(j)) {
-            return true;
-          }
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
         }
       }
       return false;
@@ -235,10 +223,12 @@
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       let rows = this.rows();
       let counter = 0;
+
       for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let value = row[minorDiagonalColumnIndexAtFirstRow];
-        if (value === 1 && (minorDiagonalColumnIndexAtFirstRow >= 0)) {
+        
+        if (value === 1) {
           counter += 1;
         }
         minorDiagonalColumnIndexAtFirstRow--;
@@ -253,8 +243,6 @@
     hasAnyMinorDiagonalConflicts: function() {
       let rows = this.rows(); 
       let startingIndex = (rows.length - 1) * 2;
-      console.log(startingIndex)
-      console.log(rows, '   rows');
       for (let i = 0; i < rows.length; i++) {  
         for (let j = startingIndex; j >= rows.length; j--) { 
           if (this.hasMinorDiagonalConflictAt(j)) {

@@ -16,9 +16,48 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = []; //fixme
+  let newBoard = new Board({n:n});
+  console.log(newBoard, '   newBoard');
+  console.log(this, '   this');
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  //travel the structure
+  var rows = newBoard.rows(); //2d array
+  var counter = 0;
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  for (var y = 0; y < rows.length; y++) {
+    let row = rows[y];
+    //rowindex is y
+    let rowIndex = y;
+    for (var x = 0; x < rows.length; x++) {
+    //colindex is x
+      let columnIndex = x;
+    //set the value in a position
+      newBoard.togglePiece(rowIndex,columnIndex);
+    //run the horizontal checker, run the vertical checker
+      if (newBoard.hasAnyRooksConflicts()) {
+        newBoard.togglePiece(rowIndex,columnIndex);
+      } else {
+        counter++;
+      }
+      if (counter === n) {
+        solution.push(newBoard);
+        break;
+      }
+  
+    //if neither are true
+    //  {then accept placement
+        //increment counter (counts placed rooks)} 
+    //if either are true {
+      //reset that value to 0 (unplace)
+    
+
+  //if counter = n then push to newBoard into solution. break out immeately
+  //if we are @ outloop, set break condition 
+
+    }
+  }
+  console.log(solution,'djfdk');
   return solution;
 };
 
